@@ -1,4 +1,4 @@
-package com.example.customegallery.permission
+package com.example.customgallery.permission
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -8,7 +8,7 @@ import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.customegallery.R
+import com.example.customgallery.R
 
 
 class ManageRuntimePermissions (

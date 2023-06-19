@@ -1,4 +1,4 @@
-package com.example.customegallery.ui.fragments
+package com.example.customgallery.ui.fragments.MainView
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -8,8 +8,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.customegallery.databinding.FragmentMainBinding
-import com.example.customegallery.permission.ManageRuntimePermissions
+import androidx.navigation.Navigation
+import com.example.customgallery.R
+import com.example.customgallery.databinding.FragmentMainBinding
+import com.example.customgallery.permission.ManageRuntimePermissions
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -82,7 +84,9 @@ class MainFragment : Fragment() {
         }
     }
     private fun goToNextScreen() {
-
+        _binding?.let {
+            Navigation.findNavController(it.root).navigate(R.id.action_mainFragment_to_gallery_folder)
+        }
     }
 
     private fun closeApplication(){

@@ -1,10 +1,11 @@
 <resources>
-    <string name="app_name">CustomeGallery</string>
+    <string name="app_name">CustomGallery</string>
     <string name="permission_title">Need permission(s)</string>
     <string name="permission_required_description">Some Permissions are required to run application if you cancel then application will close.</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="permissions_setting_message">Please enable permissions from the settings if you cancel then application will close.</string>
     <string name="settings">Settings</string>
+    <string name="gallery">Gallery</string>
 
 </resources>
