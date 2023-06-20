@@ -22,7 +22,10 @@ class GalleryFolderViewAdapter @Inject constructor() :
         this.dataList = data
         notifyDataSetChanged()
     }
-
+    fun setLinearState(isLinearView : Boolean){
+        this.isLinearView = isLinearView
+        notifyDataSetChanged()
+    }
 
     fun setClickListener(galleryFolderClickListener : GalleryFolderClickListener){
         this.galleryFolderClickListener = galleryFolderClickListener

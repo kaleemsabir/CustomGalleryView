@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.customgallery.BR
 import com.example.customgallery.R
 import com.example.customgallery.databinding.FragmentGalleryViewBinding
@@ -20,13 +22,15 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class GalleryFolderFragment :
-    BaseFragment<FragmentGalleryViewBinding, GalleryFolderViewModel>(R.layout.fragment_gallery_view),GalleryFolderViewAdapter.GalleryFolderClickListener {
+    BaseFragment<FragmentGalleryViewBinding, GalleryFolderViewModel>(R.layout.fragment_gallery_view),
+    GalleryFolderViewAdapter.GalleryFolderClickListener {
 
 
     @Inject
-    lateinit var toolBarViewModel :ToolbarViewModel
-     @Inject
-     lateinit var adapter : GalleryFolderViewAdapter
+    lateinit var toolBarViewModel: ToolbarViewModel
+
+    @Inject
+    lateinit var adapter: GalleryFolderViewAdapter
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
@@ -42,13 +46,16 @@ class GalleryFolderFragment :
         return GalleryFolderViewModel::class.java
     }
 
-    private fun init(){
+    private fun init() {
         initToolBarViewModel()
         initProgressObserver()
         initRecyclerView()
         getDataFromGallery()
         initGalleryFolderListObserver()
+        initSwitchListener()
+        initLinearStateObserver()
     }
+
     private fun initGalleryFolderListObserver() {
         initClickListener()
 
@@ -57,45 +64,65 @@ class GalleryFolderFragment :
 
     private fun initClickListener() {
         bindings.toolbar.back.setOnClickListener {
-           val navController = Navigation.findNavController(bindings.root)
+            val navController = Navigation.findNavController(bindings.root)
             navController.popBackStack()
         }
     }
 
-    private fun initToolBarViewModel(){
+    private fun initToolBarViewModel() {
         toolBarViewModel.isBackArrowShow = false
         toolBarViewModel.title = this.requireContext().getString(R.string.gallery)
         bindings.toolbar.viewModel = toolBarViewModel
     }
 
-    private fun getDataFromGallery(){
+    private fun getDataFromGallery() {
         viewModel.fetchAllGalleryFolders { this.requireActivity().contentResolver }
         lifecycleScope.launch {
             viewModel.folderMediaList.collect { response ->
-                if(response.isNotEmpty()) {
+                if (response.isNotEmpty()) {
                     adapter.setDataList(response)
                 }
             }
         }
     }
+
     private fun initProgressObserver() {
         lifecycleScope.launch {
             viewModel.isLoading.collect {
-                    when {
-                        it -> {
-                            bindings.progressBar.visibility = View.VISIBLE
-                        }
-                        else -> {
-                            bindings.progressBar.visibility = View.GONE
-                        }
+                when {
+                    it -> {
+                        bindings.progressBar.visibility = View.VISIBLE
+                    }
+                    else -> {
+                        bindings.progressBar.visibility = View.GONE
                     }
                 }
+            }
         }
     }
 
-    private fun initRecyclerView(){
+    private fun initLinearStateObserver() {
+        lifecycleScope.launch {
+            viewModel.isLinearStat.collect {
+                when {
+                    it -> {
+                        bindings.rvGalleryFragment.layoutManager =
+                            LinearLayoutManager(this@GalleryFolderFragment.requireContext())
+                        adapter.setLinearState(it)
+                    }
+                    else -> {
+                        bindings.rvGalleryFragment.layoutManager =
+                            GridLayoutManager(this@GalleryFolderFragment.requireContext(), 2)
+                        adapter.setLinearState(it)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initRecyclerView() {
         bindings.rvGalleryFragment.adapter = adapter
-        adapter.setClickListener(galleryFolderClickListener = this )
+        adapter.setClickListener(galleryFolderClickListener = this)
     }
 
     override fun onItemClick(foldermedia: FolderMedia) {
@@ -103,12 +130,21 @@ class GalleryFolderFragment :
             putParcelable(MEDIA_DATA, foldermedia)
         }
         bindings.let {
-            Navigation.findNavController(it.root).navigate(R.id.action_folder_detail,bundle)
+            Navigation.findNavController(it.root).navigate(R.id.action_folder_detail, bundle)
         }
 
     }
 
-
-
-
+    private fun initSwitchListener() {
+        bindings.toolbar.linearSwitch.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.changeState(
+                isChecked
+            )
+        }
+    }
 }
+
+
+
+
+

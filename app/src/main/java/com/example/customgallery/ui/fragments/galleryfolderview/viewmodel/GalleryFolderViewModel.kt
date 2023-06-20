@@ -20,7 +20,8 @@ class GalleryFolderViewModel @Inject constructor(private val repository: Gallery
     private val _isLoading = MutableStateFlow(false)
     val folderMediaList = _folderMediaList.asStateFlow()
     val isLoading = _isLoading.asStateFlow()
-
+    private val _isLinearState = MutableStateFlow(false)
+    val isLinearStat = _isLinearState.asStateFlow()
     fun fetchAllGalleryFolders(contentResolverProvider: () -> ContentResolver) {
         viewModelScope.launch {
             repository.loadMediaFromGallery(
@@ -41,6 +42,11 @@ class GalleryFolderViewModel @Inject constructor(private val repository: Gallery
 
                 }
             }
+        }
+    }
+    fun changeState(state:Boolean){
+        viewModelScope.launch {
+            _isLinearState.value = state
         }
     }
 
