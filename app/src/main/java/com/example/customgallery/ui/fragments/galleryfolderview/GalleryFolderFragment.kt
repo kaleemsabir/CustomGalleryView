@@ -23,7 +23,8 @@ class GalleryFolderFragment :
     BaseFragment<FragmentGalleryViewBinding, GalleryFolderViewModel>(R.layout.fragment_gallery_view),GalleryFolderViewAdapter.GalleryFolderClickListener {
 
 
-    private lateinit var toolBarViewModel :ToolbarViewModel
+    @Inject
+    lateinit var toolBarViewModel :ToolbarViewModel
      @Inject
      lateinit var adapter : GalleryFolderViewAdapter
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,9 +63,6 @@ class GalleryFolderFragment :
     }
 
     private fun initToolBarViewModel(){
-        toolBarViewModel = ToolbarViewModel {
-
-        }
         toolBarViewModel.isBackArrowShow = false
         toolBarViewModel.title = this.requireContext().getString(R.string.gallery)
         bindings.toolbar.viewModel = toolBarViewModel

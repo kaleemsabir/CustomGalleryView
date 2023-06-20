@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GalleryMediaViewModel @Inject constructor() : ViewModel() {
-    lateinit var _mediaDataItem: FolderMedia
+    private lateinit var _mediaDataItem: FolderMedia
     fun getMediaItem() = _mediaDataItem
     fun setMediaItem(media: FolderMedia) {
         _mediaDataItem = media
