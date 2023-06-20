@@ -6,7 +6,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import com.example.customgallery.utils.IMAGE
 import com.example.customgallery.utils.IMAGE_AND_VIDEOS
-import com.example.customgallery.utils.UiState
+import com.example.customgallery.utils.Response
 import com.example.customgallery.utils.VIDEO
 import com.gallerydemo.data.local.models.FolderMedia
 import com.gallerydemo.data.local.models.MediaItem
@@ -21,14 +21,14 @@ class GalleryFolderRepoImp @Inject constructor() : GalleryFolderRepoInterface {
     override fun loadMediaFromGallery(
         contentResolver: ContentResolver,
         galleryMode: Int
-    ): Flow<UiState<List<FolderMedia>>> {
+    ): Flow<Response<List<FolderMedia>>> {
         return flow {
-            emit(UiState.Loading)
+            emit(Response.Loading)
             val data = runWithContentResolver(contentResolver, galleryMode)
             if (data != null)
-                emit(UiState.Success(data))
+                emit(Response.Success(data))
             else
-                emit(UiState.Failure())
+                emit(Response.Failure())
         }.flowOn(Dispatchers.IO)
     }
 
@@ -86,7 +86,7 @@ class GalleryFolderRepoImp @Inject constructor() : GalleryFolderRepoInterface {
                     foldersMap.getOrElse(folderName) {
                         foldersMap.put(
                             folderName,
-                            FolderMedia(folderName,"0", mutableListOf())
+                            FolderMedia(folderName, mutableListOf())
                         )
                     }?.mediaListItem?.add(mediaItem)
 
@@ -96,7 +96,6 @@ class GalleryFolderRepoImp @Inject constructor() : GalleryFolderRepoInterface {
                 folders.add(
                     FolderMedia(
                         "All Videos",
-                        allVideo.size.toString(),
                         allVideo
                     )
                 )
@@ -105,7 +104,6 @@ class GalleryFolderRepoImp @Inject constructor() : GalleryFolderRepoInterface {
                 folders.add(
                     FolderMedia(
                         "All Images",
-                        allImages.size.toString(),
                         allImages
                     )
                 )
@@ -129,7 +127,14 @@ class GalleryFolderRepoImp @Inject constructor() : GalleryFolderRepoInterface {
                 it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)),
                 MediaItem(
                     id = it.getInt(it.getColumnIndexOrThrow(MediaStore.Images.Media._ID)),
-                    mimeType = it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE))
+                    mimeType = it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE)),
+                    mediaPath = getUriFromPathSegment(
+                        cursor.getLong(
+                            cursor.getColumnIndexOrThrow(
+                                MediaStore.Images.Media._ID
+                            )
+                        )
+                    ).toString()
                 )
             )
         }

@@ -5,18 +5,28 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.customgallery.databinding.GalleryFolderItemBinding
 import com.example.customgallery.databinding.LinearViewGalleryFolderItemBinding
+import com.gallerydemo.data.local.models.FolderMedia
 import javax.inject.Inject
 
 class GalleryFolderViewAdapter @Inject constructor() :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var isLinearView = false
-    private  var list = mutableListOf<Any>()
+    private var isLinearView = false
     companion object {
         private const val ITEM_GRID_VIEW = 0
         private const val ITEM_LINEAR_VIEW = 1
     }
+    private var dataList: List<FolderMedia> = mutableListOf()
+    private lateinit var galleryFolderClickListener : GalleryFolderClickListener
+     fun setDataList(data: List<FolderMedia>){
+        this.dataList = data
+        notifyDataSetChanged()
+    }
 
+
+    fun setClickListener(galleryFolderClickListener : GalleryFolderClickListener){
+        this.galleryFolderClickListener = galleryFolderClickListener
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ITEM_GRID_VIEW -> createGridViewItemViewHolder(parent)
@@ -42,7 +52,7 @@ class GalleryFolderViewAdapter @Inject constructor() :
     }
 
     override fun getItemCount(): Int {
-      return list.size
+      return dataList.size
     }
 
     private fun createGridViewItemViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
@@ -52,9 +62,13 @@ class GalleryFolderViewAdapter @Inject constructor() :
         return GridViewHolderViewHolder(itemBinding)
     }
 
-    private inner class GridViewHolderViewHolder(itemGalleryFolder: GalleryFolderItemBinding) :
+    private inner class GridViewHolderViewHolder(val itemGalleryFolder: GalleryFolderItemBinding) :
         RecyclerView.ViewHolder(itemGalleryFolder.root) {
         fun bind(position: Int) {
+            val viewModel = GalleryItemViewModel(dataList[position]) {
+                galleryFolderClickListener.onItemClick(dataList[position])
+            }
+            itemGalleryFolder.viewModel = viewModel
         }
     }
 
@@ -65,10 +79,18 @@ class GalleryFolderViewAdapter @Inject constructor() :
         return LinearViewHolderViewHolder(itemBinding)
     }
 
-    private inner class LinearViewHolderViewHolder(itemLinearGalleryFolder: LinearViewGalleryFolderItemBinding) :
+    private inner class LinearViewHolderViewHolder(val itemLinearGalleryFolder: LinearViewGalleryFolderItemBinding) :
         RecyclerView.ViewHolder(itemLinearGalleryFolder.root) {
         fun bind(position: Int) {
+            val viewModel = GalleryItemViewModel(dataList[position]) {
+                galleryFolderClickListener.onItemClick(dataList[position])
+            }
+            itemLinearGalleryFolder.viewModel = viewModel
         }
+    }
+
+    interface GalleryFolderClickListener{
+        fun onItemClick(foldermedia : FolderMedia)
     }
 
 }

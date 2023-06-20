@@ -4,7 +4,7 @@ import android.content.ContentResolver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.customgallery.repos.GalleryFolderRepoImp
-import com.example.customgallery.utils.UiState
+import com.example.customgallery.utils.Response
 import com.gallerydemo.data.local.models.FolderMedia
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,23 +17,29 @@ import javax.inject.Inject
 class GalleryFolderViewModel @Inject constructor(private val repository: GalleryFolderRepoImp) :
     ViewModel() {
     private val _folderMediaList = MutableStateFlow(emptyList<FolderMedia>())
-
+    private val _isLoading = MutableStateFlow(false)
     val folderMediaList = _folderMediaList.asStateFlow()
+    val isLoading = _isLoading.asStateFlow()
 
     fun fetchAllGalleryFolders(contentResolverProvider: () -> ContentResolver) {
         viewModelScope.launch {
             repository.loadMediaFromGallery(
                 contentResolver = contentResolverProvider(),
-            ).collectLatest { apiState ->
-                when (apiState) {
-                    is UiState.Loading -> {}
-                    is UiState.Success -> {
-                        apiState.data.let {
-                            _folderMediaList.value = (it)
+            ).collectLatest { dataState ->
+                when (dataState) {
+                    is Response.Loading -> {_isLoading.value = true}
+                    is Response.Success -> {
+                        dataState.data.let { data ->
+                            _folderMediaList.value = data.sortedBy {folder-> folder.folderName }
                         }
+                        _isLoading.value = false
 
                     }
-                    is UiState.Failure -> {
+                    is Response.Failure -> {
+                        _isLoading.value = false
+                    }
+                    else -> {
+                        _isLoading.value = false
                     }
                 }
             }
