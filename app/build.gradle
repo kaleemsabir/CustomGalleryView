@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs'
+    id 'kotlin-parcelize'
 }
 apply plugin: 'kotlin-android'
 
@@ -52,7 +54,7 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
 // navigation
-    def nav_version = "2.1.0-alpha05"
+    def nav_version = "2.4.1"
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
 

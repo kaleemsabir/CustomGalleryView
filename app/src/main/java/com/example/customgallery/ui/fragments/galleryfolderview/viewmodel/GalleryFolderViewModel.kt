@@ -38,9 +38,7 @@ class GalleryFolderViewModel @Inject constructor(private val repository: Gallery
                     is Response.Failure -> {
                         _isLoading.value = false
                     }
-                    else -> {
-                        _isLoading.value = false
-                    }
+
                 }
             }
         }

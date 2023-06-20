@@ -1,9 +1,7 @@
 package com.example.customgallery.ui.fragments.galleryfolderview
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.customgallery.BR
@@ -13,6 +11,7 @@ import com.example.customgallery.ui.base.BaseFragment
 import com.example.customgallery.ui.fragments.galleryfolderview.adapter.GalleryFolderViewAdapter
 import com.example.customgallery.ui.fragments.galleryfolderview.viewmodel.GalleryFolderViewModel
 import com.example.customgallery.ui.toolbar.ToolbarViewModel
+import com.example.customgallery.utils.MEDIA_DATA
 import com.gallerydemo.data.local.models.FolderMedia
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -24,7 +23,7 @@ class GalleryFolderFragment :
     BaseFragment<FragmentGalleryViewBinding, GalleryFolderViewModel>(R.layout.fragment_gallery_view),GalleryFolderViewAdapter.GalleryFolderClickListener {
 
 
-    lateinit var toolBarViewModel :ToolbarViewModel
+    private lateinit var toolBarViewModel :ToolbarViewModel
      @Inject
      lateinit var adapter : GalleryFolderViewAdapter
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -102,7 +101,13 @@ class GalleryFolderFragment :
     }
 
     override fun onItemClick(foldermedia: FolderMedia) {
-        TODO("Not yet implemented")
+        val bundle = Bundle().apply {
+            putParcelable(MEDIA_DATA, foldermedia)
+        }
+        bindings.let {
+            Navigation.findNavController(it.root).navigate(R.id.action_folder_detail,bundle)
+        }
+
     }
 
 
