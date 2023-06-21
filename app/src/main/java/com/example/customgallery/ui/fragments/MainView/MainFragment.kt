@@ -12,16 +12,16 @@ import androidx.navigation.Navigation
 import com.example.customgallery.R
 import com.example.customgallery.databinding.FragmentMainBinding
 import com.example.customgallery.permission.ManageRuntimePermissions
+import com.example.customgallery.utils.PERMISSION_REQUEST_CODE
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
-
-
+    private val binding get() = _binding!!
     lateinit var runtimePermission: ManageRuntimePermissions
-    private val permissionsRequestCode = 123
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +40,7 @@ class MainFragment : Fragment() {
     private fun initRuntimePermission() {
         runtimePermission = ManageRuntimePermissions(fragment = this,
             permissionsList = getRunTimeGalleryReadPermissions(),
-            code = permissionsRequestCode,
+            code = PERMISSION_REQUEST_CODE,
             callBackPermissionGranted = {
                 goToNextScreen()
             },
@@ -74,7 +74,7 @@ class MainFragment : Fragment() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == permissionsRequestCode) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
             // Check if all requested permissions are granted
             if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                 goToNextScreen()
@@ -84,13 +84,18 @@ class MainFragment : Fragment() {
         }
     }
     private fun goToNextScreen() {
-        _binding?.let {
+        binding.let {
             Navigation.findNavController(it.root).navigate(R.id.action_mainFragment_to_gallery_folder)
         }
     }
 
     private fun closeApplication(){
         this.requireActivity().finish()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        runtimePermission.checkPermissions()
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.customgallery.ui.fragments.galleryfolderview.viewmodel
 
 import android.content.ContentResolver
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.customgallery.repos.GalleryFolderRepoImp
@@ -22,10 +23,11 @@ class GalleryFolderViewModel @Inject constructor(private val repository: Gallery
     val isLoading by lazy { _isLoading.asStateFlow() }
     private val _isLinearState = MutableStateFlow(false)
     val isLinearStat by lazy { _isLinearState.asStateFlow() }
-    fun fetchAllGalleryFolders(contentResolverProvider: () -> ContentResolver) {
+    fun fetchAllGalleryFolders(contentResolver: ContentResolver , context: Context)  {
         viewModelScope.launch {
             repository.loadMediaFromGallery(
-                contentResolver = contentResolverProvider(),
+                contentResolver = contentResolver,
+                context
             ).collectLatest { dataState ->
                 when (dataState) {
                     is Response.Loading -> {_isLoading.value = true}

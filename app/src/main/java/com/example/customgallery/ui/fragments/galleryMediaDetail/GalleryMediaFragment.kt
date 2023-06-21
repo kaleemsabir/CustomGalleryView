@@ -25,6 +25,7 @@ class GalleryMediaFragment :
 
     @Inject
     lateinit var adapter: MediaViewAdapter
+
     private val mediaData by lazy {
         requireArguments().getParcelable<FolderMedia>(MEDIA_DATA)
     }

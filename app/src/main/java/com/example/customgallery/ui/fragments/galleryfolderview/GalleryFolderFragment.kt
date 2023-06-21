@@ -24,13 +24,12 @@ import javax.inject.Inject
 class GalleryFolderFragment :
     BaseFragment<FragmentGalleryViewBinding, GalleryFolderViewModel>(R.layout.fragment_gallery_view),
     GalleryFolderViewAdapter.GalleryFolderClickListener {
-
-
     @Inject
     lateinit var toolBarViewModel: ToolbarViewModel
 
     @Inject
     lateinit var adapter: GalleryFolderViewAdapter
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
@@ -44,6 +43,16 @@ class GalleryFolderFragment :
 
     override fun getViewModelClass(): Class<GalleryFolderViewModel> {
         return GalleryFolderViewModel::class.java
+    }
+
+    override fun onItemClick(foldermedia: FolderMedia) {
+        val bundle = Bundle().apply {
+            putParcelable(MEDIA_DATA, foldermedia)
+        }
+        bindings.let {
+            Navigation.findNavController(it.root).navigate(R.id.action_folder_detail, bundle)
+        }
+
     }
 
     private fun init() {
@@ -84,7 +93,10 @@ class GalleryFolderFragment :
     }
 
     private fun getDataFromGallery() {
-        viewModel.fetchAllGalleryFolders { this.requireActivity().contentResolver }
+        viewModel.fetchAllGalleryFolders(
+            this.requireActivity().contentResolver,
+            this.requireContext()
+        )
         lifecycleScope.launch {
             viewModel.folderMediaList.collect { response ->
                 if (response.isNotEmpty()) {
@@ -131,16 +143,6 @@ class GalleryFolderFragment :
     private fun initRecyclerView() {
         bindings.rvGalleryFragment.adapter = adapter
         adapter.setClickListener(galleryFolderClickListener = this)
-    }
-
-    override fun onItemClick(foldermedia: FolderMedia) {
-        val bundle = Bundle().apply {
-            putParcelable(MEDIA_DATA, foldermedia)
-        }
-        bindings.let {
-            Navigation.findNavController(it.root).navigate(R.id.action_folder_detail, bundle)
-        }
-
     }
 
 

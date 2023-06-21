@@ -4,6 +4,8 @@ The Custom Gallery App is a modern and user-friendly Android application built u
 
 Key Features:
 
+need gallery permission to run application otherwise application will be closed
+
 Show gallery view in grid and linear view.
 
 Show image and video detail by clicking on folder

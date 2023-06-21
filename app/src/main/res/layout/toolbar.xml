@@ -15,7 +15,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/toolbar_height"
         android:background="@color/purple_200">
 
         <ImageView
@@ -27,7 +27,8 @@
             android:visibility="@{viewModel.backArrowShow?View.VISIBLE:View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/back_arrow"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,13 +36,13 @@
             android:layout_marginStart="10dp"
             android:text="@{viewModel.title}"
             android:textColor="@color/black"
-            android:textSize="15dp"
+            android:textSize="@dimen/tool_bar_title_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Toolbar Title" />
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/linearSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

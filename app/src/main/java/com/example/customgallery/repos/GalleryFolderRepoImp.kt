@@ -1,9 +1,11 @@
 package com.example.customgallery.repos
 
 import android.content.ContentResolver
+import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import com.example.customgallery.R
 import com.example.customgallery.utils.IMAGE
 import com.example.customgallery.utils.IMAGE_AND_VIDEOS
 import com.example.customgallery.utils.Response
@@ -16,19 +18,20 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-
 class GalleryFolderRepoImp @Inject constructor() : GalleryFolderRepoInterface {
     override fun loadMediaFromGallery(
         contentResolver: ContentResolver,
-        galleryMode: Int
+        context: Context,
+        galleryMode: Int,
     ): Flow<Response<List<FolderMedia>>> {
         return flow {
             emit(Response.Loading)
-            val data = runWithContentResolver(contentResolver, galleryMode)
-            if (data != null)
-                emit(Response.Success(data))
-            else
-                emit(Response.Failure())
+            val data = runWithContentResolver(
+                contentResolver = contentResolver,
+                context = context,
+                galleryMode = galleryMode
+            )
+            emit(Response.Success(data))
         }.flowOn(Dispatchers.IO)
     }
 
@@ -52,6 +55,7 @@ class GalleryFolderRepoImp @Inject constructor() : GalleryFolderRepoInterface {
 
     override fun runWithContentResolver(
         contentResolver: ContentResolver,
+        context: Context,
         galleryMode: Int
     ): List<FolderMedia> {
 
@@ -95,7 +99,7 @@ class GalleryFolderRepoImp @Inject constructor() : GalleryFolderRepoInterface {
             if (canAddVideos)
                 folders.add(
                     FolderMedia(
-                        "All Videos",
+                        context.resources.getString(R.string.all_videos),
                         allVideo
                     )
                 )
@@ -103,7 +107,7 @@ class GalleryFolderRepoImp @Inject constructor() : GalleryFolderRepoInterface {
             if (canAddImages)
                 folders.add(
                     FolderMedia(
-                        "All Images",
+                        context.resources.getString(R.string.all_images),
                         allImages
                     )
                 )
