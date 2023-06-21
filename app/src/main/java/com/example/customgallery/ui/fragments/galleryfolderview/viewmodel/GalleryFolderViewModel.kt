@@ -16,12 +16,12 @@ import javax.inject.Inject
 @HiltViewModel
 class GalleryFolderViewModel @Inject constructor(private val repository: GalleryFolderRepoImp) :
     ViewModel() {
-    private val _folderMediaList = MutableStateFlow(emptyList<FolderMedia>())
-    private val _isLoading = MutableStateFlow(false)
-    val folderMediaList = _folderMediaList.asStateFlow()
-    val isLoading = _isLoading.asStateFlow()
+    private val _folderMediaList by lazy { MutableStateFlow(emptyList<FolderMedia>()) }
+    private val _isLoading by lazy { MutableStateFlow(false) }
+    val folderMediaList by lazy { _folderMediaList.asStateFlow() }
+    val isLoading by lazy { _isLoading.asStateFlow() }
     private val _isLinearState = MutableStateFlow(false)
-    val isLinearStat = _isLinearState.asStateFlow()
+    val isLinearStat by lazy { _isLinearState.asStateFlow() }
     fun fetchAllGalleryFolders(contentResolverProvider: () -> ContentResolver) {
         viewModelScope.launch {
             repository.loadMediaFromGallery(

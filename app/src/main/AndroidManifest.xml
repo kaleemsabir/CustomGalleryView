@@ -19,7 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CustomeGallery"
-        tools:targetApi="31">
+        tools:targetApi="33">
         <activity
             android:name="com.example.customgallery.ui.activities.MainActivity"
             android:exported="true">

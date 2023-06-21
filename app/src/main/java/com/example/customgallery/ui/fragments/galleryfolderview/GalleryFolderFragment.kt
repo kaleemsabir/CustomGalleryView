@@ -52,7 +52,6 @@ class GalleryFolderFragment :
         initRecyclerView()
         getDataFromGallery()
         initGalleryFolderListObserver()
-        initSwitchListener()
         initLinearStateObserver()
     }
 
@@ -63,9 +62,18 @@ class GalleryFolderFragment :
 
 
     private fun initClickListener() {
-        bindings.toolbar.back.setOnClickListener {
-            val navController = Navigation.findNavController(bindings.root)
-            navController.popBackStack()
+        bindings.let {
+            it.toolbar.let { toolBar ->
+                toolBar.back.setOnClickListener {
+                    val navController = Navigation.findNavController(bindings.root)
+                    navController.popBackStack()
+                }
+                toolBar.linearSwitch.setOnCheckedChangeListener { _, isChecked ->
+                    viewModel.changeState(
+                        isChecked
+                    )
+                }
+            }
         }
     }
 
@@ -135,13 +143,7 @@ class GalleryFolderFragment :
 
     }
 
-    private fun initSwitchListener() {
-        bindings.toolbar.linearSwitch.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.changeState(
-                isChecked
-            )
-        }
-    }
+
 }
 
 

@@ -16,7 +16,6 @@ abstract class BaseFragment<DB : ViewDataBinding, VM : ViewModel>(@LayoutRes pri
 
     private var _bindings: DB? = null
 
-    // This property is only valid between onCreateView and onDestroyView.
     protected val bindings get() = _bindings!!
     protected lateinit var viewModel: VM
 

@@ -18,15 +18,17 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class GalleryMediaFragment :
-    BaseFragment<FragmentGalleryDetailViewBinding, GalleryMediaViewModel>(R.layout.fragment_gallery_detail_view){
+    BaseFragment<FragmentGalleryDetailViewBinding, GalleryMediaViewModel>(R.layout.fragment_gallery_detail_view) {
 
     @Inject
-    lateinit var toolBarViewModel :ToolbarViewModel
+    lateinit var toolBarViewModel: ToolbarViewModel
+
     @Inject
-    lateinit var adapter : MediaViewAdapter
+    lateinit var adapter: MediaViewAdapter
     private val mediaData by lazy {
         requireArguments().getParcelable<FolderMedia>(MEDIA_DATA)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
@@ -41,17 +43,19 @@ class GalleryMediaFragment :
         return GalleryMediaViewModel::class.java
     }
 
-    private fun init(){
+    private fun init() {
         initData()
         initToolBarViewModel()
         initRecyclerView()
         initGalleryFolderListObserver()
 
     }
+
     private fun initGalleryFolderListObserver() {
         initClickListener()
     }
-    private fun initData(){
+
+    private fun initData() {
         mediaData?.let {
             viewModel.setMediaItem(it)
         }
@@ -60,26 +64,28 @@ class GalleryMediaFragment :
 
 
     private fun initClickListener() {
-        bindings.toolbar.back.setOnClickListener {
-           val navController = Navigation.findNavController(bindings.root)
-            navController.popBackStack()
+        bindings.let {
+            it.toolbar.let {
+                it.back.setOnClickListener {
+                    val navController = Navigation.findNavController(bindings.root)
+                    navController.popBackStack()
+                }
+            }
         }
     }
 
-    private fun initToolBarViewModel(){
+    private fun initToolBarViewModel() {
         toolBarViewModel.isBackArrowShow = true
         toolBarViewModel.isSwitchStateShow = false
-        toolBarViewModel.title =viewModel.getMediaItem().folderName
+        toolBarViewModel.title = viewModel.getMediaItem().folderName
         bindings.toolbar.viewModel = toolBarViewModel
+
     }
 
-    private fun initRecyclerView(){
+    private fun initRecyclerView() {
         bindings.rvMedia.adapter = adapter
         adapter.setDataList(viewModel.getMediaItem().mediaListItem)
     }
-
-
-
 
 
 }
