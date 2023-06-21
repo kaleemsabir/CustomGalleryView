@@ -1,8 +1,8 @@
-package com.example.customegallery.ui.activities
+package com.example.customgallery.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.customegallery.R
+import com.example.customgallery.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

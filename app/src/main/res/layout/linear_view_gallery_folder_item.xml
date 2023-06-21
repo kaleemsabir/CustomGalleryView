@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.customgallery.ui.fragments.galleryfolderview.adapter.GalleryItemViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{()->viewModel.clickOnItem()}"
+        android:layout_margin="@dimen/margin_10">
+
+        <ImageView
+            android:id="@+id/ivFolderIcon"
+            android:layout_width="@dimen/item_folder_icon_size"
+            android:layout_height="@dimen/item_folder_icon_size"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{viewModel.folderImageUrl}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/folder_icon_grey"
+            android:contentDescription="@string/folder_icon"/>
+
+        <TextView
+            android:id="@+id/tvFolderName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text ="@string/folder_name"
+            android:textColor="@color/teal_700"
+            android:textSize="@dimen/folder_title_text_size"
+            app:layout_constrainedWidth="true"
+            android:text="@{viewModel.folderName}"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:layout_marginStart="@dimen/margin_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivFolderIcon"
+            app:layout_constraintTop_toTopOf="@+id/ivFolderIcon"
+            tools:layout_constraintBottom_toBottomOf="parent" />
+        <TextView
+            android:id="@+id/tvCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text ="100"
+            android:textColor="@color/teal_700"
+            android:textSize="@dimen/folder_media_count_text_size"
+            android:text="@{viewModel.folderCount}"
+            android:layout_marginStart="@dimen/margin_10"
+            app:layout_constraintStart_toEndOf="@id/ivFolderIcon"
+            app:layout_constraintTop_toBottomOf="@+id/tvFolderName" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:background="@color/divider_line_color"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

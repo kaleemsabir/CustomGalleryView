@@ -1,4 +1,4 @@
-package com.example.customegallery.permission
+package com.example.customgallery.permission
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -8,7 +8,8 @@ import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.customegallery.R
+import com.example.customgallery.R
+
 
 
 class ManageRuntimePermissions (
@@ -28,14 +29,16 @@ class ManageRuntimePermissions (
 
     private fun showDialogPermissionNotGranted() {
         val builder = AlertDialog.Builder(fragment.requireContext())
-        builder.setTitle(R.string.permission_title)
-        builder.setMessage(R.string.permission_required_description)
-        builder.setPositiveButton(R.string.ok) { _, _ -> requestPermissions() }
-        builder.setNeutralButton(R.string.cancel) { _, _ ->
-            callBackPermissionCancel()
+        builder.apply {
+            setTitle(R.string.permission_title)
+            setMessage(R.string.permission_required_description)
+            setPositiveButton(R.string.ok) { _, _ -> requestPermissions() }
+            setNeutralButton(R.string.cancel) { _, _ ->
+                callBackPermissionCancel()
+            }
+            val dialog = create()
+            dialog.show()
         }
-        val dialog = builder.create()
-        dialog.show()
     }
 
     private fun isPermissionsGranted(): Int {
@@ -49,7 +52,7 @@ class ManageRuntimePermissions (
     private fun requestPermissions() {
         val permission = findDeniedPermissions()
         if (ActivityCompat.shouldShowRequestPermissionRationale(fragment.requireActivity(), permission)) {
-            permissionSettingsDialog()
+            settingsDialog()
         } else {
             ActivityCompat.requestPermissions(fragment.requireActivity(), permissionsList, code)
         }
@@ -63,17 +66,21 @@ class ManageRuntimePermissions (
         return ""
     }
 
-    private fun permissionSettingsDialog() {
-        val alertDialog: androidx.appcompat.app.AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(fragment.requireContext())
-            .setTitle(fragment.getString(R.string.app_name))
-            .setMessage(fragment.getString(R.string.permissions_setting_message))
-            .setPositiveButton(R.string.settings) { dialog, _ ->
+    private fun settingsDialog() {
+        val builder = AlertDialog.Builder(fragment.requireContext())
+        builder.apply {
+            setTitle(R.string.app_name)
+            setMessage(R.string.permissions_setting_message)
+            setPositiveButton(R.string.settings) { dialog, _ ->
                 openSettings()
                 dialog.dismiss()
             }
-            .setNegativeButton(R.string.cancel) { _, _ -> callBackPermissionCancel() }
-        alertDialog.setCancelable(false)
-        alertDialog.show()
+            setNeutralButton(R.string.cancel) { _, _ ->
+                callBackPermissionCancel()
+            }
+            val dialog = create()
+            dialog.show()
+        }
     }
 
     private fun openSettings() {

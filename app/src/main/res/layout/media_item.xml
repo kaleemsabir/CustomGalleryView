@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="com.example.customgallery.ui.fragments.galleryMediaDetail.adapter.MediaItemViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_10">
+
+        <ImageView
+            android:id="@+id/mediaImage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{viewModel.mediaImageUrl}"
+            app:layout_constraintDimensionRatio="H, 1:1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/folder_icon_grey"
+            android:contentDescription="@string/folder_icon"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/video_icon"
+            android:visibility="@{viewModel.isVideo ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/mediaImage"
+            app:layout_constraintLeft_toLeftOf="@id/mediaImage"
+            app:layout_constraintRight_toRightOf="@id/mediaImage"
+            app:layout_constraintTop_toTopOf="@id/mediaImage"
+            android:contentDescription="@string/video_icon"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
